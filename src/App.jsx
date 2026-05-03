@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "./config";
 import "./index.css";
 import AdBanner from "./components/ads/AdBanner";
 
@@ -13,7 +14,7 @@ function App() {
   // Create room
   const createRoom = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/rooms/create", {
+      const res = await axios.post(`${API_URL}/api/rooms/create`, {
         duration,
       });
       navigate(`/room/${res.data.code}`);
@@ -28,7 +29,7 @@ function App() {
     setJoinError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/rooms/join", {
+      const res = await axios.post(`${API_URL}/api/rooms/join`, {
         code: roomCode,
       });
 

@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import { API_URL } from "./config";
 import "./index.css";
-
-const BACKEND_URL = "http://localhost:5000";
 
 function Room() {
   const { code } = useParams();
@@ -39,7 +38,7 @@ function Room() {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/rooms/join`, {
+        const res = await fetch(`${API_URL}/api/rooms/join`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code }),
@@ -65,7 +64,9 @@ function Room() {
   useEffect(() => {
     if (socketRef.current) return; // prevent multiple connections
 
-    socketRef.current = io(BACKEND_URL);
+    socketRef.current = io(API_URL, {
+      transports: ["websocket"],
+    });
 
     socketRef.current.on("connect", () => {
       console.log("Connected:", socketRef.current.id);
@@ -178,7 +179,7 @@ function Room() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(`${BACKEND_URL}/api/upload`, {
+      const res = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
